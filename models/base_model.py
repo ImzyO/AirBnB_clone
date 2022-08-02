@@ -31,10 +31,8 @@ class BaseModel:
 
         else:
             self.id = kwargs
-            self.created_at = datetime.strptime(self.created_at, "%Y-%m-%dT%H:./
-            %MM:S.%f"
-            self.updated_at = datetime.strptime(self.updated_at, "%Y-%m-%dT%H:./
-            %MM:S.%f"
+            self.created_at = datetime.strptime(self.created_at, "%Y-%m-%dT%H:%M:%S.%f"
+            self.updated_at = datetime.strptime(self.created_at, "%Y-%m-%dT%H:%M:%S.%f"
 
         def __str__(self):
             """prints string representations"""
