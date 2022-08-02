@@ -1,69 +1,76 @@
 #!/usr/bin/python3
-"""module for base_model.py"""
-
-from models.base_model import BaseModel
-from uuid import uuid4
+"""base_model module
+This module contains all a class which is used by all the
+classes of the AirBnB projects.
+"""
 from datetime import datetime
+import uuid
+import models
+
 
 class BaseModel:
-    """
-    class BaseModel: defines all common methods/attributes
-    for other classes
+    """ BaseModel class
+    This is the Base Model that takes care of the
+    initialization, serialization and deserialization
+    of instances.
+
+    Attributes:
+        id (str): It's a UUID for the instance created.
+        created_at (datetime): The current date and time that
+            an instance is created.
+        updated_at (datetime): The current date and time that
+            an instance is created and it will be updated every
+            time that the object changes.
     """
     def __init__(self, *args, **kwargs):
-        """initialization of public instance attributes"""
-        # If only args;
-        # id is assigned a random value by generating uuid.uuid4 as a string
-        # created_at is assigned with the current datetime using a
-        # datetime oject .now which is preferrable to(.utcnow & today)
-        # updated_at is assigned with the current datetime and is updated
-        # everytime an oject is changed
+        """BaseModel __init__ Method
+        The BaseModel class from which future classes will be derived
+        """
 
-        # else if kwargs;
-        # id is the value inputed which is kwargs
-        # created_at returns corresponding datestring passed according to
-        # format using datetime object .strptime same as updated_at
+        if kwargs:
+            tdf = "%Y-%m-%dT%H:%M:%S.%f"
+            for key in kwargs.keys():
+                if key in ["created_at", "updated_at"]:
+                    kwargs[key] = datetime.strptime(kwargs[key], tdf)
 
-        if not kwargs:
-            self.id = str(uuid.uuid4())
-            self.created_at = datetime.now()
-            self.updated_at = datetime.now()
+                self.id = kwargs["id"]
+                self.created_at = kwargs["created_at"]
+                self.updated_at = kwargs["updated_at"]
 
-        else:
-            self.id = kwargs
-            self.created_at = datetime.strptime(self.created_at, "%Y-%m-%dT%H:%M:%S.%f"
-            self.updated_at = datetime.strptime(self.created_at, "%Y-%m-%dT%H:%M:%S.%f"
+        self.id = str(uuid.uuid4())
+        self.created_at = datetime.now()
+        self.updated_at = datetime.now()
+        storage.new()
 
-        def __str__(self):
-            """prints string representations"""
-            """self.__class__.__name__ refers to calling class name"""
-            return "[{}] ({}) {}".format(self.__class__.__name__, self.id, self.__dict__)
+    def __str__(self):
+        """Returns a string representation of BaseModel instances"""
 
-        def save(self):
-            """
-            updates the public instance attribute updated_at with 
-            the current datetime
-            """
-            self.updated_at = datetime.now()
+        x = self.__class__.__name__
+        y = self.id
+        z = self.__dict__
 
-        def to_dict(self):
-            """
-            returns a dictionary containing all keys/values of __dict__
-            of the instance
-            """
-            # by using self.__dict__, only instance attributes set
-            # will be returned.
-            # a key __class__ must be added to this dictionary with
-            # the class name of the object.
-            # created_at and updated_at must be converted to string object 
-            # in ISO format;
-            # format: %Y-%m-%dT%H:%M:%S.%f (ex: 2017-06-14T22:31:03.285259)
-            # using the .isoformat object from datetime.
-            # a copy is created to not modify original dict
+        return "[{}] ({}) {}".forma(x, y, z)
 
-            x = self.__dict__.copy()
-            x["__class__"] = self.__class__.__name__
-            x["created_at"] = self.created_at.isoformat()
-            x["updated_at"] = self.updated_at.isoformat()
+    def save(self):
+        """Updates and saves a Basemodel instance
+        Updates:
+            It updates `updated_at` attribute
+            with the current datetime
 
-            return x
+        Save:
+            It dumps the class data
+            into a jason file
+        """
+
+        self.updated_at = datetime.now()
+        storage.save()
+
+    def to_dict(self):
+        """Converts the information of the class to human-readable format
+        Returns a new dictionary containing all keys/values
+        of __dict__ of the instance.
+        """
+        dictionary = {"__class__": self.__class__.__name__, "id": self.id}
+        dictionary["created_at"] = self.created_at.isoformat()
+        dictionary["updated_at"] = self.updated_at.isoformat()
+        return dictionary
