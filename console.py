@@ -53,7 +53,7 @@ class HBNBCommand(cmd.Cmd):
         """help new"""
         print("command to help with new instance creation")
 
-    def do_show(self, args):
+    def do_show(self, *args):
         """
         Prints the string representation of an instance based on the class
         name and id. Ex: $ show BaseModel 1234-1234-1234
@@ -71,7 +71,7 @@ class HBNBCommand(cmd.Cmd):
         """command to help show"""
         print("command to help show using show")
 
-     def do_destory(self, args):
+     def do_destory(self, *args):
         """
         Deletes an instance based on the class name and id (save the change
         into the JSON file). Ex: $ destroy BaseModel 1234-1234-1234
@@ -100,7 +100,7 @@ class HBNBCommand(cmd.Cmd):
         """command to help destroy"""
         print("command to help destroy")    
 
-     def do_all(self, args):
+     def do_all(self, *args):
         """
         Prints all string representation of all instances based or 
         not on the class name. Ex: $ all BaseModel or $ all
