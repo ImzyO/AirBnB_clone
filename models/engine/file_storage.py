@@ -11,7 +11,7 @@ from models.place import Place
 from models.review import Review
 from models.state import State
 from models.user import User
-
+from os import path
 classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
            "Place": Place, "Review": Review, "State": State, "User": User}
 
@@ -47,7 +47,7 @@ class FileStorage:
 
     def reload(self):
         """deserializes the JSON file to __objects"""
-        if self.__file_path:
+        if path.exists(self.__file_path):
             with open(self.__file_path, "r") as file:
                 json_object = json.load(file)
 
@@ -55,4 +55,3 @@ class FileStorage:
                 class_name = json_object[key]["__class__"]
                 object_dict = json_object[key]
                 self.__objects[key] = classes[class_name](**object_dict)
-
