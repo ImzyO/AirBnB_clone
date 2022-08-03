@@ -34,7 +34,7 @@ class HBNBCommand(cmd.Cmd):
     def create_new_instance(self, classname):
         if len(classname) == 0:
             print("** class name missing **")
-        elif classname not in self.classes:
+        elif classname not in self.Classes:
             print("** class doesn't exist **")
         else:
             new_instance = BaseModel.classname
