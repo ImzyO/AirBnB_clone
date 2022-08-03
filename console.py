@@ -26,5 +26,9 @@ class HBNBCommand(cmd.Cmd):
         """help on EOF"""
         print("End of File command: end of program reached")
 
+    def empty_line(self):
+        """empty line shouldn't execute anything"""
+        pass
+
 if __name__ == '__main__':
         HBNBCommand().cmdloop()
