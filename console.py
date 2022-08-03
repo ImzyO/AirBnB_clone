@@ -1,118 +1,189 @@
 #!/usr/bin/python3
-"""
-a program called console.py that contains
-the entry point of the command interpreter
+"""Console Module
+This module controls all databases.
+Can create, modify and delete instances.
 """
 import cmd
+import json
+import shlex
+from models.engine.file_storage import FileStorage
+from models import storage
+from models.base_model import BaseModel
+from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
+from datetime import datetime
+
+classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
+           "Place": Place, "Review": Review, "State": State, "User": User}
+
 
 class HBNBCommand(cmd.Cmd):
-    """class HBNBCommand"""
-
+    """command processor class."""
     prompt = "(hbnb)"
-    Classes = ["BaseModel"]
 
-    def do_quit(self, quit):
-        """exiting/quiting the program"""
+    def do_EOF(self, arg):
+        """EOF command to exit the program.
+        """
         return True
 
-    def help_on_quit(self):
-        """help on quit"""
-        print("Quit command to exit the program")
-
-    def do_EOF(self, EOF):
-        """End of program efore executing"""
+    def do_quit(self, arg):
+        """Quit command to exit the program.
+        """
         return True
 
-    def help_on_EOF(self):
-        """help on EOF"""
-        print("End of File command: end of program reached")
-
-    def empty_line(self):
-        """empty line shouldn't execute anything"""
-        pass
-
-    def help_empty_line(self):
-        """command to help with empty line"""
-        print("command helpswith emptyline")
-
-    def create_new(self, classname):
+    def do_create(self, args):
+        """Creates a new instance.
         """
-        Creates a new instance of BaseModel, saves it (to the JSON file)
-        and prints the id. Ex: $ create BaseModel
-        """
-        if len(classname) == 0:
+        strg = shlex.split(args)
+        if len(strg) == 0:
             print("** class name missing **")
-        elif classname not in self.Classes:
-            print("** class doesn't exist **")
+            return False
         else:
-            new_instance = ("{} {}".format(classname))
-            new_instance.save
-            print(new_instance.id)
+            cls_name = strg[0]
+            if cls_name not in classes.keys():
+                print("class doesn't exist")
+            else:
+                obj = self.classes[cls_name]()
+                obj.save()
+                print(obj.id)
 
-    def help_new(self):
-        """help new"""
-        print("command to help with new instance creation")
+    def do_show(self, args):
+        """Prints the string representation of an instance
+        based on the class name and id.
+        """
+        strg = shlex.split(args)
 
-    def do_show(self, *args):
-        """
-        Prints the string representation of an instance based on the class
-        name and id. Ex: $ show BaseModel 1234-1234-1234
-        """
-        if len(args[0]) == 0:
+        if len(strg) == 0:
             print("** class name missing **")
-        elif args[0] not in self.Classes:
-            print("** class doesn't exist **")
-        elif len(args[1]) == 0:
-            print("** instance id missing **")
-        else:
+            return False
+
+        if len(strg) > 0:
+            if strg[0] not in classes.keys():
+                print("** class doesn't exist **")
+                return False
+
+        if len(strg) > 1:
+            if strg[1] == "":
+                print("** instance id missing **")
+                return False
+
+        key = f"{strg[0]}.{strg[1]}"
+        if key not in storage.all().keys():
             print("** no instance found **")
+            return False
 
-    def help_show(self):
-        """command to help show"""
-        print("command to help show using show")
+        obj = storage.all()[key]
+        print(f"[{obj.__class__.__name__}] ({obj.id}) {obj.__dict__}")
 
-     def do_destory(self, *args):
+    def do_destroy(self, args):
+        """Deletes an instance based on the class name and id.
         """
-        Deletes an instance based on the class name and id (save the change
-        into the JSON file). Ex: $ destroy BaseModel 1234-1234-1234
-        """
-        # comments for do_destroy and do_show methods
-        # if classname missing; prints
-        # if class name doesn't exist prints
-        # if id missing;prints instanceid missing
-        # if instance of classname doesn't exist for id;
-        # print no instance found
+        strg = shlex.split(args)
+        obj_id = shlex.split(args)[1]
 
-        if len(args[0]) == 0:
+        if len(strg) == 0:
             print("** class name missing **")
-        elif args[0] not in self.Classes:
-            print("** class doesn't exist **")
-        elif len(args[1]) == 0:
-            print("** instance id missing **")
-        else:
+            return False
+
+        if len(strg) > 0:
+            if strg[0] not in classes.keys():
+                print("** class doesn't exist **")
+                return False
+
+        if len(strg) > 1:
+            if strg[1] == "":
+                print("** instance id missing **")
+                return False
+
+        key = f"{strg[0]}.{strg[1]}"
+        if key not in storage.all().keys():
             print("** no instance found **")
+            return False
+        storage.all().pop(key)
+        storage.save()
 
-     destroyed = destroy("{} {}".format(arg[0], arg[1])           
-     destroyed.save
-     print(destroyed)
-
-     def help_destroy(self):
-        """command to help destroy"""
-        print("command to help destroy")    
-
-     def do_all(self, *args):
+    def do_all(self, args):
+        """Prints all string representation of all instances
+        based or not on the class name.
         """
-        Prints all string representation of all instances based or 
-        not on the class name. Ex: $ all BaseModel or $ all
-        """
-        if args[0] not in self.Classes:
-            print("** class doesn't exist **")
+        strg = shlex.split(args)
+        if len(strg) > 0:
+            cls_name = strg[0]
+            if cls_name in classes.keys():
+                ar = []
+                class_name = classes[cls_name]
+                for key in storage.all().keys():
+                    if cls_name in key.split("."):
+                        obj = storage.all()[key]
+                        ar.append(f"[{class_name}] ({obj.id}) {obj.__dict__}")
+                print(ar)
+            else:
+                print("** class doesn't exist **")
         else:
-        print(str("[{}]".format(args)))
+            ar = []
+            for key in storage.all().keys():
+                cls_name = key.split(".")[0]
+                class_name = classes[cls_name]
+                obj = storage.all()[key]
+                ar.append(f"[{class_name}] ({obj.id}) {obj.__dict__}")
+            print(ar)
 
-    def help_all(self):
-        """helps with all arguments inputed"""
-        print("Command to show all instances")
+    def do_update(self, args):
+        """Updates an instance based on the class name and id
+        by adding or updating attribute.
+        """
+        strg = shlex.split(args)
+
+        if len(strg) == 0:
+            print("** class name missing **")
+            return False
+
+        if len(strg) > 0:
+            if strg[0] not in classes.keys():
+                print("** class doesn't exist **")
+                return False
+
+        if len(strg) > 1:
+            if strg[1] == "":
+                print("** instance id missing **")
+                return False
+
+            key = f"{strg[0]}.{strg[1]}"
+            if key not in storage.all().keys():
+                print("** no instance found **")
+                return False
+
+        if len(strg) > 2:
+            if strg[2] == "":
+                print("** attribute name missing **")
+                return False
+
+            if strg[2] in ["id", "created_at", "updated_at"]:
+                return False
+
+        if len(strg) > 3:
+            if strg[3] == "":
+                print("** value missing **")
+                return False
+
+        key = f"{strg[0]}.{strg[1]}"
+        atrr_name = strg[2]
+        atrr_value = strg[3]
+
+        obj = storage.all()[key]
+        z = atrr_value.split(".")
+        if atrr_value.isdigit():
+            setattr(obj, atrr_name, int(atrr_value))
+
+        if len(z) == 2 and z[0].isdigit() and z[1].isdigit():
+            setattr(obj, atrr_name, float(atrr_value))
+
+        setattr(obj, atrr_name, atrr_value)
+
 
 if __name__ == '__main__':
-        HBNBCommand().cmdloop()
+    HBNBCommand().cmdloop()
