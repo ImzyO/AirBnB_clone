@@ -1,13 +1,14 @@
 #!/usr/bin/python3
-"""User Module
+"""
+User Module
 This Module inherits from BaseModel class.
 User Module contains the user information.
 """
 from models.base_model import BaseModel
 
-
 class User(BaseModel):
-    """User Class
+    """
+    User Class
     Attributes:
         email (str): The User email
         password (str): The User password
