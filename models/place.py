@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-"""Place Module
+"""
+Place Module
 This Module inherits from BaseModel class.
 Place Module contains the attributes to be assigned
 to the Places created.
@@ -7,9 +8,9 @@ to the Places created.
 
 from models.base_model import BaseModel
 
-
 class Place(BaseModel):
-    """Place Class
+    """
+    Place Class
     Attributes:
         city_id (str): The UUID of the City the Place is located in
         user_id (str): The UUID of the User of the Place

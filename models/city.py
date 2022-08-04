@@ -7,9 +7,9 @@ to the cities.
 
 from models.base_model import BaseModel
 
-
 class City(BaseModel):
-    """City Class
+    """
+    City Class
     This is the City Class ...
     Attributes:
         state_id (str): The UUID of the State the City belongs to
