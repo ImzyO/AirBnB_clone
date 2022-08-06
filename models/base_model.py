@@ -39,7 +39,7 @@ class BaseModel:
 
         self.id = str(uuid.uuid4())
         self.created_at = datetime.now()
-        self.updated_at = self.created_at
+        self.updated_at = datetime.now()
         storage.new(self)
 
     def __str__(self):
@@ -49,7 +49,7 @@ class BaseModel:
         y = self.id
         z = self.__dict__
 
-        return f"[{x}] ({y}) {z}"
+        return "[{:s}] ({:s}) {}".format(x, y, z)
 
     def save(self):
         """Updates and saves a Basemodel instance
