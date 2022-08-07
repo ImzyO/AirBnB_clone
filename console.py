@@ -128,30 +128,6 @@ class HBNBCommand(cmd.Cmd):
         else:
             print("** class doesn't exist **")
 
-    def default(self, line):
-    """When the command prefix is not recognized, this method
-    looks for whether the command entered has the syntax:
-    "<class name>.<method name>" or not,
-    and links it to the corresponding method in case the
-    class exists and the method belongs to the class.
-    """
-    if '.' in line:
-        splitted = re.split(r'\.|\(|\)', line)
-        class_name = splitted[0]
-        method_name = splitted[1]
-
-        if class_name in self.allowed_classes:
-            if method_name == 'all':
-                print(self.get_objects(class_name))
-            elif method_name == 'count':
-                print(len(self.get_objects(class_name)))
-            elif method_name == 'show':
-                class_id = splitted[2][1:-1]
-                self.do_show(class_name + ' ' + class_id)
-            elif method_name == 'destroy':
-                class_id = splitted[2][1:-1]
-                self.do_destroy(class_name + ' ' + class_id)
-
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
