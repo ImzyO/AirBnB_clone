@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 """ console """
-
 import cmd
 from datetime import datetime
 import models
@@ -12,7 +11,6 @@ from models.review import Review
 from models.state import State
 from models.user import User
 import shlex  # for splitting the line along spaces except in double quotes
-
 classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
            "Place": Place, "Review": Review, "State": State, "User": User}
 
@@ -129,6 +127,47 @@ class HBNBCommand(cmd.Cmd):
                 print("** instance id missing **")
         else:
             print("** class doesn't exist **")
+
+    def default(self, line: str) -> None:
+        if len(line) != 0 and "." in line:
+            cls_name = line.split(".")[0]
+            if cls_name == "":
+                print("** class name missing **")
+                return False
+            if cls_name not in classes.keys():
+                print("** class doesn't exist **")
+                return False
+            cmd_cmd = line.split(".")[1]
+            strg = cmd_cmd.split("(")[1].split(")")[0]
+            m = strg.split(",")
+            cmd_lst = []
+            j = 0
+            for x in m:
+                cmd_lst.append(shlex.split(m[j])[0])
+                j += 1
+            obj_id = cmd_lst[0]
+            if "," not in line:
+                if "show" in cmd_cmd:
+                    self.do_show(obj_id)
+                if "destroy" in cmd_cmd:
+                    self.do_destroy(obj_id)
+                if cmd_cmd == "all()":
+                    self.do_all("all " + cls_name)
+                if cmd_cmd == "count()":
+                    count = 0
+                    for cls_name in storage.all().keys():
+                        count += 1
+                    print(count)
+                    return False
+            if "update" in line:
+                if len(cmd_lst) == 3:
+                    attr_name = cmd_lst[1]
+                    attr_value = cmd_lst[2]
+                    self.do_update(cls_name + obj_id + attr_name + attr_value)
+                if len(cmd_lst) == 2:
+                    key = f"{cls_name}.{obj_id}"
+                    obj = storage.all()[key]
+                    obj.__dict__.update(cmd_lst[1])
 
 
 if __name__ == '__main__':

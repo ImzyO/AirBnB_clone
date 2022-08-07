@@ -2,17 +2,14 @@
 """
 Contains class BaseModel
 """
-
 from datetime import datetime
 import models
 import uuid
-
 time = "%Y-%m-%dT%H:%M:%S.%f"
 
 
 class BaseModel:
     """The BaseModel class from which future classes will be derived"""
-
     def __init__(self, *args, **kwargs):
         """Initialization of the base model"""
         if kwargs:
