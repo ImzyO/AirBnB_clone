@@ -2,7 +2,6 @@
 """
 Contains the FileStorage class
 """
-from os.path import exists as file_exists
 import json
 from models.amenity import Amenity
 from models.base_model import BaseModel
@@ -42,8 +41,10 @@ class FileStorage:
 
     def reload(self):
         """deserializes the JSON file to __objects"""
-        file_exists(self.__file_path):
+        try:
             with open(self.__file_path, 'r') as f:
                 jo = json.load(f)
             for key in json_object:
                 self.__objects[key] = classes[jo[key]["__class__"]](**jo[key])
+        except:
+            pass
