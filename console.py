@@ -117,6 +117,17 @@ class HBNBCommand(cmd.Cmd):
                 if k in models.storage.all():
                     if len(args) > 2:
                         if len(args) > 3:
+                            if args[0] == "Place":
+                                if args[2] in integers:
+                                    try:
+                                        args[3] = int(args[3])
+                                    except:
+                                        args[3] = 0
+                                elif args[2] in floats:
+                                    try:
+                                        args[3] = float(args[3])
+                                    except:
+                                        args[3] = 0.0
                             setattr(models.storage.all()[k], args[2], args[3])
                             models.storage.all()[k].save()
                         else:
@@ -129,7 +140,6 @@ class HBNBCommand(cmd.Cmd):
                 print("** instance id missing **")
         else:
             print("** class doesn't exist **")
-
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()

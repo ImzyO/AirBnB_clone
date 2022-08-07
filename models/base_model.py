@@ -16,21 +16,19 @@ class BaseModel:
     def __init__(self, *args, **kwargs):
         """Initialization of the base model"""
         if kwargs:
-            for key in kwargs.keys():
-                if key in ["created_at", "updated_at"]:
-                    kwargs[key] = datetime.strptime(kwargs[key], time)
-                    if key == "created_at":
-                        self.created_at = kwargs["created_at"]
-                    if key == "updated_at":
-                        self.updated_at = kwargs["updated_at"]
-                if "id" in kwargs.keys():
-                    self.id = kwargs["id"]
-
+            for key, value in kwargs.items():
+                if key != "__class__":
+                    setattr(self, key, value)
+            if hasattr(self, "created_at") and type(self.created_at) is str:
+                self.created_at = datetime.strptime(kwargs["created_at"], time)
+            if hasattr(self, "updated_at") and type(self.updated_at) is str:
+                self.updated_at = datetime.strptime(kwargs["updated_at"], time)
         else:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
             self.updated_at = self.created_at
             models.storage.new(self)
+            models.storage.save()
 
     def __str__(self):
         """String representation of the BaseModel class"""
@@ -44,10 +42,10 @@ class BaseModel:
 
     def to_dict(self):
         """returns a dictionary containing all keys/values of the instance"""
-        dictionary = {"__class__": self.__class__.__name__, "id": self.id}
-
-        if hasattr(self, "created_at"):
-            dictionary["created_at"] = self.created_at.isoformat()
-        if hasattr(self, "updated_at"):
-            dictionary["updated_at"] = self.updated_at.isoformat()
-        return dictionary
+        new_dict = self.__dict__.copy()
+        if "created_at" in new_dict:
+            new_dict["created_at"] = new_dict["created_at"].strftime(time)
+        if "updated_at" in new_dict:
+            new_dict["updated_at"] = new_dict["updated_at"].strftime(time)
+        new_dict["__class__"] = self.__class__.__name__
+        return new_dict
