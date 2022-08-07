@@ -5,8 +5,8 @@ This Module inherits from BaseModel class.
 Review Module contains the attributes to be assigned
 to the reviews created by the users.
 """
-
 from models.base_model import BaseModel
+
 
 class Review(BaseModel):
     """
