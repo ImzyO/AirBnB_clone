@@ -17,7 +17,7 @@ class BaseModel:
         """Initialization of the base model"""
         if kwargs:
             for key in kwargs.keys():
-                if key in ["created_at", "updated_at"]:
+                if key in ["created_at", "updated_at"] and type(key) == str:
                     kwargs[key] = datetime.strptime(kwargs[key], tdf)
                     if key == "created_at":
                         self.created_at = kwargs["created_at"]
