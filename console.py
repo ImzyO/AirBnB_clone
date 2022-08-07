@@ -128,46 +128,29 @@ class HBNBCommand(cmd.Cmd):
         else:
             print("** class doesn't exist **")
 
-    def default(self, line: str) -> None:
-        if len(line) != 0 and "." in line:
-            cls_name = line.split(".")[0]
-            if cls_name == "":
-                print("** class name missing **")
-                return False
-            if cls_name not in classes.keys():
-                print("** class doesn't exist **")
-                return False
-            cmd_cmd = line.split(".")[1]
-            strg = cmd_cmd.split("(")[1].split(")")[0]
-            m = strg.split(",")
-            cmd_lst = []
-            j = 0
-            for x in m:
-                cmd_lst.append(shlex.split(m[j])[0])
-                j += 1
-            obj_id = cmd_lst[0]
-            if "," not in line:
-                if "show" in cmd_cmd:
-                    self.do_show(obj_id)
-                if "destroy" in cmd_cmd:
-                    self.do_destroy(obj_id)
-                if cmd_cmd == "all()":
-                    self.do_all("all " + cls_name)
-                if cmd_cmd == "count()":
-                    count = 0
-                    for cls_name in storage.all().keys():
-                        count += 1
-                    print(count)
-                    return False
-            if "update" in line:
-                if len(cmd_lst) == 3:
-                    attr_name = cmd_lst[1]
-                    attr_value = cmd_lst[2]
-                    self.do_update(cls_name + obj_id + attr_name + attr_value)
-                if len(cmd_lst) == 2:
-                    key = f"{cls_name}.{obj_id}"
-                    obj = storage.all()[key]
-                    obj.__dict__.update(cmd_lst[1])
+    def default(self, line):
+    """When the command prefix is not recognized, this method
+    looks for whether the command entered has the syntax:
+    "<class name>.<method name>" or not,
+    and links it to the corresponding method in case the
+    class exists and the method belongs to the class.
+    """
+    if '.' in line:
+        splitted = re.split(r'\.|\(|\)', line)
+        class_name = splitted[0]
+        method_name = splitted[1]
+
+        if class_name in self.allowed_classes:
+            if method_name == 'all':
+                print(self.get_objects(class_name))
+            elif method_name == 'count':
+                print(len(self.get_objects(class_name)))
+            elif method_name == 'show':
+                class_id = splitted[2][1:-1]
+                self.do_show(class_name + ' ' + class_id)
+            elif method_name == 'destroy':
+                class_id = splitted[2][1:-1]
+                self.do_destroy(class_name + ' ' + class_id)
 
 
 if __name__ == '__main__':
