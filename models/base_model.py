@@ -45,8 +45,9 @@ class BaseModel:
     def to_dict(self):
         """returns a dictionary containing all keys/values of the instance"""
         dictionary = {"__class__": self.__class__.__name__, "id": self.id}
-        if hasattr(self, "created_at")
+
+        if hasattr(self, "created_at"):
             dictionary["created_at"] = self.created_at.isoformat()
-        if hasattr(self, "updated_at")
+        if hasattr(self, "updated_at"):
             dictionary["updated_at"] = self.updated_at.isoformat()
         return dictionary
