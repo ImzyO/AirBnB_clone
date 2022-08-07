@@ -10,6 +10,8 @@ from models.place import Place
 from models.review import Review
 from models.state import State
 from models.user import User
+classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
+           "Place": Place, "Review": Review, "State": State, "User": User}
 
 
 class FileStorage:
@@ -41,6 +43,6 @@ class FileStorage:
             with open(self.__file_path, 'r') as f:
                 jo = json.load(f)
             for key in jo:
-                self.__objects[key] = eval(jo[key]["__class__"])(**jo[key])
+                self.__objects[key] = classes[jo[key]["__class__"]](**jo[key])
         except:
-            pass
+           pass
