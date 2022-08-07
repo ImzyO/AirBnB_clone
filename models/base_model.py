@@ -16,13 +16,13 @@ class BaseModel:
     def __init__(self, *args, **kwargs):
         """Initialization of the base model"""
         if kwargs:
-            for key, value in kwargs.items():
-                if key != "__class__":
-                    setattr(self, key, value)
-            if hasattr(self, "created_at") and type(self.created_at) is str:
-                self.created_at = datetime.strptime(kwargs["created_at"], time)
-            if hasattr(self, "updated_at") and type(self.updated_at) is str:
-                self.updated_at = datetime.strptime(kwargs["updated_at"], time)
+            for key in kwargs.keys():
+                if key in ["created_at", "updated_at"]:
+                    kwargs[key] = datetime.strptime(kwargs[key], tdf)
+
+            self.id = kwargs["id"]
+            self.created_at = kwargs["created_at"]
+            self.updated_at = kwargs["updated_at"]
         else:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
