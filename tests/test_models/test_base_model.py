@@ -69,15 +69,17 @@ class TestBaseModel(unittest.TestCase):
         self.assertEqual(type(baseModel.updated_at), datetime)
 
     def test_construction_from_dictionary(self):
-        """ This function proves that when passing a dictionary with\
+        """ This function proves that when passing a dictionary with
             extra attributes, these are added correctly
         """
-        dictionary = {"id": "7734cf23-6c89-4662-8483-284727324c77", "created_at":
-               "2020-02-17T16:32:39.023915", "updated_at":
-               "2020-02-17T16:32:39.023940", "__class__": "BaseModel",}
 
-        x = dictionary["created_at"]
-        y = dictionary["updated_at"]
+        dict_t = {"id": "7734cf23-6c89-4662-8483-284727324c77",
+                  "created_at": "2020-02-17T16:32:39.023915",
+                  "updated_at": "2020-02-17T16:32:39.023940",
+                  "__class__": "BaseModel"}
+
+        x = dict_t["created_at"]
+        y = dict_t["updated_at"]
         time_format = "%Y-%m-%dT%H:%M:%S.%f"
         my_base = BaseModel(**dic)
 
@@ -96,12 +98,12 @@ class TestBaseModel(unittest.TestCase):
 
     def test_to_dict(self):
         """test that values in dict returned from to_dict are correct"""
-        test_dict = baseModel.to_dict()
+        dt = baseModel.to_dict()
 
-        self.assertEqual(test_dict["id"], baseModel.id)
-        self.assertEqual(test_dict["created_at"], baseModel.created_at.isoformat())
-        self.assertEqual(test_dict["updated_at"], baseModel.updated_at.isoformat())
-        self.assertEqual(test_dict["__class__"], "BaseModel")
+        self.assertEqual(dt["id"], baseModel.id)
+        self.assertEqual(dt["created_at"], baseModel.created_at.isoformat())
+        self.assertEqual(dt["updated_at"], baseModel.updated_at.isoformat())
+        self.assertEqual(dt["__class__"], "BaseModel")
 
         self.assertEqual(type(test_dict["__class__"]), str)
         self.assertEqual(type(test_dict["id"]), str)
