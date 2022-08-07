@@ -41,7 +41,7 @@ class HBNBCommand(cmd.Cmd):
         strg = shlex.split(args)
         if len(strg) == 0:
             print("** class name missing **")
-            return False
+
         else:
             cls_name = strg[0]
             if cls_name not in classes.keys():
@@ -59,22 +59,18 @@ class HBNBCommand(cmd.Cmd):
 
         if len(strg) == 0:
             print("** class name missing **")
-            return False
 
         if len(strg) > 0:
             if strg[0] not in classes.keys():
                 print("** class doesn't exist **")
-                return False
 
         if len(strg) > 1:
             if strg[1] == "":
                 print("** instance id missing **")
-                return False
 
         key = f"{strg[0]}.{strg[1]}"
         if key not in storage.all().keys():
             print("** no instance found **")
-            return False
 
         obj = storage.all()[key]
         print(f"[{obj.__class__.__name__}] ({obj.id}) {obj.__dict__}")
@@ -87,22 +83,19 @@ class HBNBCommand(cmd.Cmd):
 
         if len(strg) == 0:
             print("** class name missing **")
-            return False
 
         if len(strg) > 0:
             if strg[0] not in classes.keys():
                 print("** class doesn't exist **")
-                return False
 
         if len(strg) > 1:
             if strg[1] == "":
                 print("** instance id missing **")
-                return False
 
         key = f"{strg[0]}.{strg[1]}"
         if key not in storage.all().keys():
             print("** no instance found **")
-            return False
+
         storage.all().pop(key)
         storage.save()
 
@@ -140,35 +133,29 @@ class HBNBCommand(cmd.Cmd):
 
         if len(strg) == 0:
             print("** class name missing **")
-            return False
 
         if len(strg) > 0:
             if strg[0] not in classes.keys():
                 print("** class doesn't exist **")
-                return False
 
         if len(strg) > 1:
             if strg[1] == "":
                 print("** instance id missing **")
-                return False
 
             key = f"{strg[0]}.{strg[1]}"
             if key not in storage.all().keys():
                 print("** no instance found **")
-                return False
 
         if len(strg) > 2:
             if strg[2] == "":
                 print("** attribute name missing **")
-                return False
 
             if strg[2] in ["id", "created_at", "updated_at"]:
-                return False
+                return
 
         if len(strg) > 3:
             if strg[3] == "":
                 print("** value missing **")
-                return False
 
         key = f"{strg[0]}.{strg[1]}"
         atrr_name = strg[2]
