@@ -49,7 +49,7 @@ class BaseModel:
         y = self.id
         z = self.__dict__
 
-        return "[{:s}] ({:s}) {}".format(x, y, z)
+        return f"[{x}] ({y}) {z}"
 
     def save(self):
         """Updates and saves a Basemodel instance
