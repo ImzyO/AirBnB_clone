@@ -50,6 +50,7 @@ How to start a command interpreter?
                                           $
                                           
 Why we use it ?
+
                       Create a new object (ex: a new User or a new Place)
                       Retrieve an object from a file, a database etc…
                       Do operations on objects (count, compute stats, etc…)
