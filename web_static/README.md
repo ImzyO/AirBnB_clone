@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 0x01. AirBnB clone - Web static
 At the end of this project you are expected to be able to explain to anyone, without the help of Google:
 * What is HTML?
@@ -13,3 +14,6 @@ At the end of this project you are expected to be able to explain to anyone, wit
 * What is a selector?
 * How do you compute CSS Specificity Value?
 * What are Box properties in CSS?
+=======
+HTML & CSS
+>>>>>>> 59af1b8b4f0270d9a6bfd41d991ceecb7a748c8f
